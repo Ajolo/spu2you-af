@@ -1,23 +1,7 @@
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request
 var TYPES = require('tedious').TYPES;
-
-
-var config = {
-    authentication: {
-        options: {
-            userName: 'spu2you-admin',
-            password: 'pp123wxyz!' 
-        },
-        type: 'default'
-    },
-    server: 'spu2you-reservations.database.windows.net',
-    options:
-    {
-        database: 'spu2you-reservations',
-        encrypt: true
-    }
-};
+var config = require('../creds.js');
 
 var connection = new Connection(config);
 
