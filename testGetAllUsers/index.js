@@ -2,6 +2,8 @@
 Driver={ODBC Driver 13 for SQL Server};Server=tcp:spu2you-reservations.database.windows.net,1433;Database=spu2you-reservations;Uid=spu2you-admin@spu2you-reservations;Pwd={your_password_here};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;
 */
 
+// module.exports = async function (context, req) {
+
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request
 var TYPES = require('tedious').TYPES;
@@ -74,3 +76,5 @@ function queryDatabase()
 
     connection.execSql(request);
 }
+
+// }
