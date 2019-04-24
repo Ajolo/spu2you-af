@@ -10,22 +10,29 @@ connection.on('connect', function(err){
         console.log(err)
     }
     else {
-        deleteRobot();
+        getAllRobots();
     }
 });
 
-function deleteRobot()
+function getAllRobots()
 {
-    console.log('Attempting to delete robot...');
+    console.log('Reading rows from the Table...');
 
     // Read all rows from table
     var request = new Request(
-        "DELETE FROM Robot WHERER RobotID = '5'",
+        "SELECT * FROM Robot",
         function(err, rowCount, rows)
         {
+            console.log(rowCount + ' robots');
             process.exit();
         }
     );
+
+    request.on('row', function(columns) {
+        columns.forEach(function(column) {
+            console.log("%s\t%s", column.metadata.colName, column.value);
+        });
+    });
 
     connection.execSql(request);
 }

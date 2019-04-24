@@ -10,15 +10,17 @@ connection.on('connect', function(err){
         console.log(err)
     }
     else {
-        addRobot();
+        deleteRobot();
     }
 });
 
-function addRobot()
+function deleteRobot()
 {
-    console.log('Adding a robot...');
+    console.log('Attempting to delete robot...');
+
+    // Read all rows from table
     var request = new Request(
-        "INSERT INTO Robot (RobotID) VALUES (5)",
+        "DELETE FROM Robot WHERE RobotID = '5'",
         function(err, rowCount, rows)
         {
             process.exit();
