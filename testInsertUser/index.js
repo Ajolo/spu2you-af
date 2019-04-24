@@ -32,30 +32,22 @@ connection.on('connect', function(err){
         console.log(err)
     }
     else {
-        queryDatabase();
+        insertTest();
     }
 });
 
 
-function queryDatabase()
+function insertTest() 
 {
-    console.log('Reading rows from the Table...');
+    console.log('Attempting insert...');
 
-    // Read all rows from table
     var request = new Request(
-        "SELECT * FROM Users",
+        "INSERT INTO users (uID) VALUES (00027)",
         function(err, rowCount, rows)
         {
-            console.log(rowCount + ' row(s) returned');
             process.exit();
         }
     );
-
-    request.on('row', function(columns) {
-        columns.forEach(function(column) {
-            console.log("%s\t%s", column.metadata.colName, column.value);
-        });
-    });
 
     connection.execSql(request);
 }
