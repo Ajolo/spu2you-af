@@ -10,20 +10,20 @@ connection.on('connect', function(err){
         console.log(err)
     }
     else {
-        getAllUsers();
+        getAllTimeSlots();
     }
 });
 
-function getAllUsers()
+function getAllTimeSlots()
 {
     console.log('Reading rows from the Table...');
 
     // Read all rows from table
     var request = new Request(
-        "SELECT * FROM Users",
+        "SELECT * FROM TimeSlots",
         function(err, rowCount, rows)
         {
-            console.log(rowCount + ' users');
+            console.log(rowCount + ' timeslots');
             process.exit();
         }
     );
