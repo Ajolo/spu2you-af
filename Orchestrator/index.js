@@ -1,7 +1,8 @@
-module.exports = async function (context, req) {
-    var Connection = require('tedious').Connection;
-    var Request = require('tedious').Request;
-    var config = require('./creds.js');
+var Connection = require('tedious').Connection;
+var Request = require('tedious').Request;
+var config = require('./creds.js');
+
+module.exports = function (context, req) {
 
     var connection = new Connection(config);
 
@@ -24,16 +25,23 @@ module.exports = async function (context, req) {
             "deleteRobot": "DELETE FROM Robots WHERE RobotID = '5'"
         };
 
-        if (err) {
-            context.log(err);
-        }
-        else {
-            execDbCommand(routes[req.query.func])
-        }
+        var gimme = execDbCommand("SELECT * FROM Users");
+        console.log("~~~~~~~~~~~~~~~~~~~~");
+
+        console.log(gimme);
+
+        console.log("~~~~~~~~~~~~~~~~~~~~");
 
         /*
-        if (req.query.name || (req.body && req.body.name)) {
-            execDbCommand(routes[req.query.func])
+        if (err) {
+            context.log(err);
+            context.res = {
+                status: 400,
+                body: "error"
+            };
+        }
+        else if (req.query.func || (req.body && req.body.func)) {
+            execDbCommand(routes[req.query.func]);
         }
         else {
             context.res = {
@@ -42,46 +50,50 @@ module.exports = async function (context, req) {
             };
         }
         */
-    });
+    
 
 
     /* 
         Executes sql request passed in as first parameter 
     */
-    function execDbCommand(sqlStatement)
-    {
-        console.log('Reading rows from the Table...');
+        function execDbCommand(sqlStatement)
+        {
+            console.log('Reading rows from the Table...');
 
-        var retval = ' ';
+            var retval = ' ';
+            // console.log(sqlStatement);
+            // Read all rows from table
+            var r;
+            var request = new Request(
+                sqlStatement,
+                function(err, rowCount, rows)
+                {
+                    console.log(rowCount + ' rows returned');
+                    
+                    // console.log(retval)
+                    
+                    /*
+                    context.res = {
+                        status: 200, 
+                        body: retval
+                    };
 
-        // Read all rows from table
-        var request = new Request(
-            sqlStatement,
-            function(err, rowCount, rows)
-            {
-                context.log(rowCount + ' rows returned');
-                // context.log(retval);
+                    context.done();
+                    */
+                    return(retval)
+                    process.exit();
+                }
+            );
             
-                context.res = {
-                    status: 200, 
-                    body: JSON.stringify(retval)
-                };
-                
-                context.done();
-
-                process.exit();
-            }
-        );
-        
-        request.on('row', function(columns) {            
-            retval += columns;
-            /*
-            columns.forEach(function(column) {
-                console.log("%s\t%s", column.metadata.colName, column.value);
+            request.on('row', function(columns) {     
+                // console.log(columns)       
+                retval += JSON.stringify(columns);
+                /*columns.forEach(function(column) {
+                    console.log("%s\t%s", column.metadata.colName, column.value);
+                });*/
             });
-            */
-        });
-        
-        connection.execSql(request);
-    }
+            
+            connection.execSql(request);
+        }
+    });
 };
