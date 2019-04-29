@@ -3,11 +3,8 @@ var Request = require('tedious').Request;
 var config = require('./creds.js');
 
 module.exports = function (context, req) {
-
     var connection = new Connection(config);
-
     connection.on('connect', function(err){
-
         var routes = {
             "getAllUsers": "SELECT * FROM Users",
             "getAllRobots":"SELECT * FROM Robots",
@@ -25,12 +22,7 @@ module.exports = function (context, req) {
             "deleteRobot": "DELETE FROM Robots WHERE RobotID = '5'"
         };
 
-        var gimme = execDbCommand("SELECT * FROM Users");
-        console.log("~~~~~~~~~~~~~~~~~~~~");
-
-        console.log(gimme);
-
-        console.log("~~~~~~~~~~~~~~~~~~~~");
+        execDbCommand("SELECT * FROM Users");
 
         /*
         if (err) {
@@ -59,38 +51,27 @@ module.exports = function (context, req) {
         function execDbCommand(sqlStatement)
         {
             console.log('Reading rows from the Table...');
-
             var retval = ' ';
-            // console.log(sqlStatement);
+
             // Read all rows from table
-            var r;
             var request = new Request(
                 sqlStatement,
                 function(err, rowCount, rows)
                 {
-                    console.log(rowCount + ' rows returned');
-                    
-                    // console.log(retval)
-                    
-                    /*
+                    console.log(rowCount + ' rows returned');                    
                     context.res = {
                         status: 200, 
                         body: retval
                     };
 
+                    // connection.close();
                     context.done();
-                    */
-                    return(retval)
-                    process.exit();
+                    // process.exit();
                 }
             );
             
             request.on('row', function(columns) {     
-                // console.log(columns)       
                 retval += JSON.stringify(columns);
-                /*columns.forEach(function(column) {
-                    console.log("%s\t%s", column.metadata.colName, column.value);
-                });*/
             });
             
             connection.execSql(request);
