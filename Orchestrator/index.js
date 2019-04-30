@@ -22,17 +22,18 @@ module.exports = function (context, req) {
             "deleteRobot": "DELETE FROM Robots WHERE RobotID = '5'"
         };
 
-        execDbCommand("SELECT * FROM Users");
 
-        /*
+        // execDbCommand("SELECT * FROM Users");
+        
         if (err) {
             context.log(err);
             context.res = {
                 status: 400,
                 body: "error"
             };
+            context.done();
         }
-        else if (req.query.func || (req.body && req.body.func)) {
+        else if (req.query.func && (req.query.func in routes)) { // || (req.body && req.body.func)) {
             execDbCommand(routes[req.query.func]);
         }
         else {
@@ -40,14 +41,12 @@ module.exports = function (context, req) {
                 status: 400,
                 body: "Please pass a name on the query string or in the request body"
             };
+            context.done();
         }
+
+        /* 
+            Executes sql request passed in as first parameter 
         */
-    
-
-
-    /* 
-        Executes sql request passed in as first parameter 
-    */
         function execDbCommand(sqlStatement)
         {
             console.log('Reading rows from the Table...');
