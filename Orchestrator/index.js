@@ -44,8 +44,8 @@ module.exports = function(context, req) {
     }
 
     /* 
-            Executes sql request passed in as first parameter 
-        */
+        Executes sql request passed in as first parameter 
+    */
     function execDbCommand(sqlStatement) {
       console.log("Reading rows from the Table...");
       var retval = " ";
