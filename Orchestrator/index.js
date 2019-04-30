@@ -9,6 +9,12 @@ module.exports = function(context, req) {
       getAllUsers: "SELECT * FROM Users",
       getAllRobots: "SELECT * FROM Robots",
       getAllTimeSlots: "SELECT * FROM TimeSlots",
+      getBookedReservations:
+        "SELECT * FROM TimeSlots, Reservation WHERE TimeSlots.IsReserved = true AND Reservation.ResDate = '20190920'",
+      getAvailableReservations:
+        "SELECT * FROM TimeSlots, Reservation WHERE TimeSlots.IsReserved = false AND Reservation.ResDate = '20190920'",
+      getReservations:
+        "SELECT * FROM Reservation WHERE Reservation.ResDate = '20190920'",
 
       addUserOld: "INSERT INTO Users (uID) VALUES (5)",
       addUser: "INSERT INTO Users DEFAULT VALUES",
@@ -17,10 +23,13 @@ module.exports = function(context, req) {
         "INSERT INTO TimeSlots(IsReserved, StartTime, EndTime) VALUES (0,07:30,10:30)",
       addRobotOld: "INSERT INTO Robots (RobotID) VALUES (5)",
       addRobot: "INSERT INTO Robots(IsReserved) VALUES (0)",
+      addReservation:
+        "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, 1, '20190920')",
 
       deleteUser: "DELETE FROM Users WHERE uID = '25'",
       deleteTimeSlot: "DELETE FROM TimeSlots WHERE TimeID = '5'",
-      deleteRobot: "DELETE FROM Robots WHERE RobotID = '5'"
+      deleteRobot: "DELETE FROM Robots WHERE RobotID = '5'",
+      deleteReservation: "DELETE FROM Reservation WHERE uID = 1"
     };
 
     // execDbCommand("SELECT * FROM Users");
