@@ -8,7 +8,7 @@ module.exports = function (context, req) {
         var routes = {
             "getAllUsers": "SELECT * FROM Users",
             "getAllRobots":"SELECT * FROM Robots",
-            "getAllTimeSlots": "SELECT * FROM TimeSlots", 
+            "getAllTimeSlots": "SELECT * FROM TimeSlots",
 
             "addUserOld": "INSERT INTO Users (uID) VALUES (5)",
             "addUser": "INSERT INTO Users DEFAULT VALUES",
@@ -21,7 +21,6 @@ module.exports = function (context, req) {
             "deleteTimeSlot": "DELETE FROM TimeSlots WHERE TimeID = '5'",
             "deleteRobot": "DELETE FROM Robots WHERE RobotID = '5'"
         };
-
 
         // execDbCommand("SELECT * FROM Users");
         
