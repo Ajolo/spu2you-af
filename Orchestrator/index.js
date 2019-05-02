@@ -10,6 +10,7 @@ module.exports = function(context, req) {
             getAllUsers: "SELECT * FROM Users",
             getAllRobots: "SELECT * FROM Robots",
             getAllTimeSlots: "SELECT * FROM TimeSlots",
+            getAllReservations: "SELECT * FROM Reservation",
             
             addUserOld: "INSERT INTO Users (uID) VALUES (5)",
             addUser: "INSERT INTO Users DEFAULT VALUES",
@@ -18,9 +19,6 @@ module.exports = function(context, req) {
                 "INSERT INTO TimeSlots(IsReserved, StartTime, EndTime) VALUES (0,07:30,10:30)",
             addRobotOld: "INSERT INTO Robots (RobotID) VALUES (5)",
             addRobot: "INSERT INTO Robots(IsReserved) VALUES (0)",
-
-            addReservation:
-                "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, 1, '20190502')",
 
             deleteUser: "DELETE FROM Users WHERE uID = '25'",
             deleteTimeSlot: "DELETE FROM TimeSlots WHERE TimeID = '5'",
@@ -31,9 +29,14 @@ module.exports = function(context, req) {
         // if date is specified, add and set necessary routes / SQL
         if (req.query.date) {
             routes["getReservations"] =
-                "SELECT * FROM Reservation WHERE Reservation.ResDate = '" + req.query.date + "'";
-            routes["addReservation"] =
-                "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, 1, '" + req.query.date + ")'";
+                "SELECT * FROM Reservation WHERE Reservation.ResDate = '" + 
+                req.query.date + "'";
+            if (req.query.timeID) {
+                routes["addReservation"] =
+                    "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, "
+                    + req.query.timeID + ", '" + req.query.date + "')";
+            }
+            
         }
 
         if (err) {
