@@ -39,6 +39,7 @@ module.exports = function(context, req) {
             
         }
 
+        // try to exec sql based on specified req.query.func parameters 
         if (err) {
             context.log(err);
             context.res = {
@@ -58,28 +59,26 @@ module.exports = function(context, req) {
             context.done();
         }
 
-        /* 
-            Executes sql request passed in as first parameter 
-        */
+        // executes sql request passed in as first parameter 
         function execDbCommand(sqlStatement) {
-        console.log("Reading rows from the Table...");
-        var retval = " ";
+            console.log("Reading rows from the Table...");
+            var retval = " ";
 
-        // Read all rows from table
-        var request = new Request(sqlStatement, function(err, rowCount, rows) {
-            console.log(rowCount + " rows returned");
-            context.res = {
-                status: 200,
-                body: retval
-            };
-            context.done();
-        });
+            // Read all rows from table
+            var request = new Request(sqlStatement, function(err, rowCount, rows) {
+                console.log(rowCount + " rows returned");
+                context.res = {
+                    status: 200,
+                    body: retval
+                };
+                context.done();
+            });
 
-        request.on("row", function(columns) {
-            retval += JSON.stringify(columns);
-        });
+            request.on("row", function(columns) {
+                retval += JSON.stringify(columns);
+            });
 
-        connection.execSql(request);
+            connection.execSql(request);
         }
     });
 };
