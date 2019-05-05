@@ -31,12 +31,14 @@ module.exports = function(context, req) {
             routes["getReservations"] =
                 "SELECT * FROM Reservation WHERE Reservation.ResDate = '" + 
                 req.query.date + "'";
+            routes["getUsedTimeSlots"] = 
+                "SELECT T.TimeID FROM TimeSlots T, Reservation R WHERE R.ResDate = '" + 
+                req.query.date + "' AND R.TimeID = T.TimeID"
             if (req.query.timeID) {
                 routes["addReservation"] =
                     "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, "
                     + req.query.timeID + ", '" + req.query.date + "')";
             }
-            
         }
 
         // try to exec sql based on specified req.query.func parameters 
@@ -62,11 +64,14 @@ module.exports = function(context, req) {
         // executes sql request passed in as first parameter 
         function execDbCommand(sqlStatement) {
             console.log("Reading rows from the Table...");
-            var retval = " ";
+            // var retval = "";
+
+            var returnContainer = {};           // Object
 
             // Read all rows from table
             var request = new Request(sqlStatement, function(err, rowCount, rows) {
                 console.log(rowCount + " rows returned");
+                var retval = JSON.stringify(returnContainer);
                 context.res = {
                     status: 200,
                     body: retval
@@ -74,11 +79,19 @@ module.exports = function(context, req) {
                 context.done();
             });
 
-            request.on("row", function(columns) {
-                retval += JSON.stringify(columns);
+            var iterator = 0
+            // returnContainer[column.metadata.colName] = column.value;
+            request.on('row', function(columns) {
+                iterator += 1
+                returnContainer[iterator] = columns
             });
-
+            
             connection.execSql(request);
         }
     });
 };
+
+// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+// change output to return *something* so that it is clear when getUsedTimeSlots does not 
+// have anything to return as intended -- not to be confused with a connection error
+// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
