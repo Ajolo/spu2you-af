@@ -93,3 +93,4 @@ out
 node_modules/
 .vscode/
 creds.js
+.funcignore
