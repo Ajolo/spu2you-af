@@ -37,20 +37,42 @@ module.exports = function(context, req) {
                 req.query.date +
                 "' AND R.TimeID = T.TimeID";
             if (req.query.timeID) {
-                routes["addReservation"] =
+                routes["addReservationOld"] = // remove me when addReservation works 
                     "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, " +
                     req.query.timeID +
                     ", '" +
                     req.query.date +
                     "')";
+                if (req.query.uEmail) {
+                    routes["addReservation"] =
+                        "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) Values(1, " +
+                        req.query.uEmail +
+                        ", " +
+                        req.query.timeID + 
+                        ", " +
+                        req.query.date +
+                        "')";
+                }
             }
         }
 
-        if (req.query.uEmail)
+        // add reservation format: spu2you-af...orchestrator...func=addReservation&date=20190507&timeID=2&uEmail=hector@spu.edu
+        // request res's for specific user ...&func=getReservations&uEmail=hector@spu.edu
+
+        // if uEmail is specified, add and set necessary routes / SQL
+        if (req.query.uEmail) {
             routes["addUser"] =
                 "INSERT INTO Users (uEmail) VALUES ('" +
                 req.query.uEmail +
                 "')";
+            routes["getUserReservations"] = 
+                "SELECT R.ResDate, R.TimeID, R.uID, U.uEmail FROM Reservation R, Users U " +
+                "WHERE R.uID = U.uID AND U.uEmail = '" +
+                req.query.uEmail +
+                "'";
+            console.log(routes["getUserReservations"])
+        }
+
 
         // try to exec sql based on specified req.query.func parameters
         if (err) {
@@ -63,7 +85,8 @@ module.exports = function(context, req) {
         }
         if (req.query.func && req.query.func in routes) {
             execDbCommand(routes[req.query.func]);
-        } else {
+        } 
+        else {
             context.res = {
                 status: 400,
                 body:
