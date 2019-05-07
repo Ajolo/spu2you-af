@@ -13,7 +13,7 @@ module.exports = function(context, req) {
             getAllReservations: "SELECT * FROM Reservation",
 
             addUserOld: "INSERT INTO Users (uID) VALUES (5)",
-            //addUser: "INSERT INTO Users DEFAULT VALUES",
+            //addUser: "INSERT INTO Users DEFAULT VALUES", -- deprecated, should now add and include email
             addTimeSlotOld: "INSERT INTO TimeSlots (TimeID) VALUES (5)",
             addTimeSlot:
                 "INSERT INTO TimeSlots(IsReserved, StartTime, EndTime) VALUES (0,07:30,10:30)",
@@ -26,7 +26,7 @@ module.exports = function(context, req) {
             deleteReservation: "DELETE FROM Reservation WHERE uID = 1"
         };
 
-        // if date is specified, add and set necessary routes / SQL
+        // set routes/SQL for query values when specified 
         if (req.query.date) {
             routes["getReservations"] =
                 "SELECT * FROM Reservation WHERE Reservation.ResDate = '" +
@@ -54,9 +54,16 @@ module.exports = function(context, req) {
                         "')";
                 }
             }
+            if (req.query.uEmail) {
+                routes["getUserReservationsDate"] =
+                    "SELECT R.ResDate, R.TimeID, R.uID, U.uEmail FROM Reservation R, Users U " +
+                    "WHERE R.uID = U.uID AND U.uEmail = '" +
+                    req.query.uEmail +
+                    "' AND R.ResDate = '" +
+                    req.query.date +
+                    "'";
+            }
         }
-
-        // if uEmail is specified, add and set necessary routes / SQL
         if (req.query.uEmail) {
             routes["addUser"] =
                 "INSERT INTO Users (uEmail) VALUES ('" +
