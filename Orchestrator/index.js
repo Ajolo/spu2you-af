@@ -56,9 +56,6 @@ module.exports = function(context, req) {
             }
         }
 
-        // add reservation format: spu2you-af...orchestrator...func=addReservation&date=20190507&timeID=2&uEmail=hector@spu.edu
-        // request res's for specific user ...&func=getReservations&uEmail=hector@spu.edu
-
         // if uEmail is specified, add and set necessary routes / SQL
         if (req.query.uEmail) {
             routes["addUser"] =
@@ -70,9 +67,7 @@ module.exports = function(context, req) {
                 "WHERE R.uID = U.uID AND U.uEmail = '" +
                 req.query.uEmail +
                 "'";
-            console.log(routes["getUserReservations"])
         }
-
 
         // try to exec sql based on specified req.query.func parameters
         if (err) {
