@@ -10,12 +10,38 @@ This document shows examples of spu2you-af function GET requests, with the Azure
 Parameters passed in, which are then handled using req.query.[parameter] are bracketed like so. 
 
 ### getUserReservations
-
 Returns a specified user's reservations
-
-What things you need to install the software  how to install them
-
 ```
 https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getUserReservations&uEmail=[email]
+```
+
+### addReservation
+Creates a reservation for the user on the specified date for the specified time slot 
+```
+https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=addReservation&uEmail=[email]&date=[date]&timeID=[timeId]
+```
+
+### getUsedTimeSlots
+Retrieves all taken timeslots for a given date 
+```
+https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getUsedTimeSlots&date=[date]
+```
+
+### getUserReservationsDate
+Gets reservations for a given user on a specific date
+```
+https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getUserReservationsDate&uEmail=[email]&date=[date]
+```
+
+### getReservations
+Returns all reservations for a specified date
+```
+https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getReservations&date=[date]
+```
+
+### addUser
+Adds user profile to database for future reservation records
+```
+https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=addUser&uEmail=[email]
 ```
 
