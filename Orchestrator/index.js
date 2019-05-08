@@ -45,14 +45,13 @@ module.exports = function(context, req) {
                     "')";
                 if (req.query.uEmail) {
                     routes["addReservation"] =
-                        "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, " +
-                        req.query.uEmail +
-                        ", " +
-                        req.query.timeID + 
-                        ", '" +
+                        "Execute InsertReservation @uEmail = '" + 
+                        req.query.uEmail + 
+                        "', @TimeID = " +
+                        req.query.timeID +
+                        ", @ResDate = '" +
                         req.query.date +
-                        "')";
-                    console.log(routes["addReservation"])
+                        "'"
                 }
             }
             if (req.query.uEmail) {
