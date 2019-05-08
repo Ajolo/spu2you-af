@@ -5,7 +5,7 @@ var config = require("./creds.js");
 module.exports = function(context, req) {
     var connection = new Connection(config);
     connection.on("connect", function(err) {
-        // routes not needing date
+        // routes not needing user input
         var routes = {
             getAllUsers: "SELECT * FROM Users",
             getAllRobots: "SELECT * FROM Robots",
@@ -45,13 +45,14 @@ module.exports = function(context, req) {
                     "')";
                 if (req.query.uEmail) {
                     routes["addReservation"] =
-                        "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) Values(1, " +
+                        "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, " +
                         req.query.uEmail +
                         ", " +
                         req.query.timeID + 
-                        ", " +
+                        ", '" +
                         req.query.date +
                         "')";
+                    console.log(routes["addReservation"])
                 }
             }
             if (req.query.uEmail) {
@@ -92,7 +93,7 @@ module.exports = function(context, req) {
             context.res = {
                 status: 400,
                 body:
-                    "Please pass a name on the query string or in the request body"
+                    "Bad combination of req.queries"
             };
             context.done();
         }
