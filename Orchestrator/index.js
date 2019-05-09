@@ -78,7 +78,7 @@ module.exports = function(context, req) {
                 "SELECT * FROM Reservation R, Users U WHERE ResDate >  (GETDATE() - 1) " +
                 "AND U.uID = R.uID AND uEmail = '" +
                 req.query.uEmail +
-                "'";
+                "' ORDER BY ResDate, TimeID";
         }
         if (req.query.ResID) {
             routes["deleteReservation"] =
@@ -138,7 +138,14 @@ module.exports = function(context, req) {
     });
 };
 
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-// change output to return *something* so that it is clear when getUsedTimeSlots does not
-// have anything to return as intended -- not to be confused with a connection error
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+/* 
+Silent failures that should return SOMETHING:
+
+bad:
+    - uEmail
+    - date
+    - time 
+    - resID
+
+Handle by checking first that these already exist when doing a get
+*/
