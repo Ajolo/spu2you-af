@@ -62,7 +62,7 @@ module.exports = function(context, req) {
                     "' AND R.ResDate = '" +
                     req.query.date +
                     "'";
-            }
+             }
         }
         if (req.query.uEmail) {
             routes["addUser"] =
@@ -74,7 +74,13 @@ module.exports = function(context, req) {
                 "WHERE R.uID = U.uID AND U.uEmail = '" +
                 req.query.uEmail +
                 "'";
+            routes["getActiveUserReservations"] =
+                "SELECT * FROM Reservation R, Users U WHERE ResDate >  (GETDATE() - 1) " +
+                "AND U.uID = R.uID AND uEmail = '" +
+                req.query.uEmail +
+                "'";
         }
+
 
         // try to exec sql based on specified req.query.func parameters
         if (err) {

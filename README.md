@@ -15,6 +15,12 @@ Returns a specified user's reservations
 https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getUserReservations&uEmail=[email]
 ```
 
+### getActiveUserReservations
+Returns only *active* (read: future) reservations 
+```
+https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getActiveUserReservations&uEmail=[email]
+```
+
 ### addReservation
 Creates a reservation for the user on the specified date for the specified time slot 
 ```
