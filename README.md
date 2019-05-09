@@ -11,7 +11,7 @@ Parameters passed in, which are then handled using req.query.[parameter] are bra
 
 ### getUserReservations
 
-Returns a specified user's reservations
+Returns a specified user's reservations for ALL time -- frontend should probably be using getActiveUserReservations
 
 ```
 https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getUserReservations&uEmail=[email]
@@ -19,7 +19,7 @@ https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getUserR
 
 ### getActiveUserReservations
 
-Returns only _active_ (read: future) reservations
+Returns only _active_ (read: today onward) reservations
 
 ```
 https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getActiveUserReservations&uEmail=[email]
