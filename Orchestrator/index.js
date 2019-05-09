@@ -22,11 +22,11 @@ module.exports = function(context, req) {
 
             deleteUser: "DELETE FROM Users WHERE uID = '25'",
             deleteTimeSlot: "DELETE FROM TimeSlots WHERE TimeID = '5'",
-            deleteRobot: "DELETE FROM Robots WHERE RobotID = '5'",
-            deleteReservation: "DELETE FROM Reservation WHERE uID = 1"
+            deleteRobot: "DELETE FROM Robots WHERE RobotID = '5'"
+            //deleteReservation: "DELETE FROM Reservation WHERE uID = 1"
         };
 
-        // set routes/SQL for query values when specified 
+        // set routes/SQL for query values when specified
         if (req.query.date) {
             routes["getReservations"] =
                 "SELECT * FROM Reservation WHERE Reservation.ResDate = '" +
@@ -37,7 +37,7 @@ module.exports = function(context, req) {
                 req.query.date +
                 "' AND R.TimeID = T.TimeID";
             if (req.query.timeID) {
-                routes["addReservationOld"] = // remove me when addReservation works 
+                routes["addReservationOld"] = // remove me when addReservation works
                     "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, " +
                     req.query.timeID +
                     ", '" +
@@ -45,13 +45,13 @@ module.exports = function(context, req) {
                     "')";
                 if (req.query.uEmail) {
                     routes["addReservation"] =
-                        "Execute InsertReservation @uEmail = '" + 
-                        req.query.uEmail + 
+                        "Execute InsertReservation @uEmail = '" +
+                        req.query.uEmail +
                         "', @TimeID = " +
                         req.query.timeID +
                         ", @ResDate = '" +
                         req.query.date +
-                        "'"
+                        "'";
                 }
             }
             if (req.query.uEmail) {
@@ -62,14 +62,14 @@ module.exports = function(context, req) {
                     "' AND R.ResDate = '" +
                     req.query.date +
                     "'";
-             }
+            }
         }
         if (req.query.uEmail) {
             routes["addUser"] =
                 "INSERT INTO Users (uEmail) VALUES ('" +
                 req.query.uEmail +
                 "')";
-            routes["getUserReservations"] = 
+            routes["getUserReservations"] =
                 "SELECT R.ResDate, R.TimeID, R.uID, U.uEmail FROM Reservation R, Users U " +
                 "WHERE R.uID = U.uID AND U.uEmail = '" +
                 req.query.uEmail +
@@ -81,6 +81,10 @@ module.exports = function(context, req) {
                 "'";
         }
 
+        if (req.query.ResID) {
+            routes["deleteReservation"] =
+                "DELETE FROM Reservation WHERE ResID = " + req.query.ResID;
+        }
 
         // try to exec sql based on specified req.query.func parameters
         if (err) {
@@ -93,12 +97,10 @@ module.exports = function(context, req) {
         }
         if (req.query.func && req.query.func in routes) {
             execDbCommand(routes[req.query.func]);
-        } 
-        else {
+        } else {
             context.res = {
                 status: 400,
-                body:
-                    "Bad combination of req.queries"
+                body: "Bad combination of req.queries"
             };
             context.done();
         }
