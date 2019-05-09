@@ -56,7 +56,7 @@ module.exports = function(context, req) {
             }
             if (req.query.uEmail) {
                 routes["getUserReservationsDate"] =
-                    "SELECT R.ResID, R.ResDate, R.TimeID, R.uID, U.uEmail FROM Reservation R, Users U " +
+                    "SELECT * FROM Reservation R, Users U " +
                     "WHERE R.uID = U.uID AND U.uEmail = '" +
                     req.query.uEmail +
                     "' AND R.ResDate = '" +
