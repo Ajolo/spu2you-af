@@ -79,20 +79,6 @@ module.exports = function(context, req) {
         }
 
 
-
-        // verify data does not already exist before executing an INSERT sql statement
-        if ((req.query.func).substring(0,3) == 'add') {
-            // var result = checkPreexisting();
-            if (checkPreexisting() == false) {
-                context.res = {
-                    status: 400,
-                    body: "User already exists"
-                };
-            }
-        }
-
-
-
         // try to exec sql based on specified req.query.func parameters
         if (err) {
             context.log(err);
@@ -145,31 +131,5 @@ module.exports = function(context, req) {
 
             connection.execSql(request);
         }
-
-
-
-        function checkPreexisting() {
-            // if a request is made for an 'add-' function, ensure not duplicate data
-            if (req.query.func == 'addUser') { // check uEmail
-                // execDbCommand("SELECT uID from Users WHERE uEmail = '" + req.query.uEmail + "'");
-                console.log("~~~~~~~~~~~~~~~~~~");
-                console.log(execDbCommand("SELECT uID from Users WHERE uEmail = '" + req.query.uEmail + "'"));
-                console.log("~~~~~~~~~~~~~~~~~~");
-
-                // if ()
-            }
-        }
     });
 };
-
-/* 
-Silent failures that should return SOMETHING:
-
-bad:
-    - uEmail
-    - date
-    - time 
-    - resID
-
-Handle by checking first that these already exist when doing a get
-*/
