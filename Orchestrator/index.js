@@ -5,7 +5,6 @@ var config = require("./creds.js");
 module.exports = function(context, req) {
     var connection = new Connection(config);
     connection.on("connect", function(err) {
-
         // initialize routes not needing user input
         var routes = {
             getAllUsers: "SELECT * FROM Users",
@@ -23,7 +22,6 @@ module.exports = function(context, req) {
             deleteRobot: "DELETE FROM Robots WHERE RobotID = '5'",
             deleteReservationOld: "DELETE FROM Reservation WHERE uID = 1"
         };
-
 
         // set routes/SQL for query values when specified
         if (req.query.date) {
@@ -61,7 +59,9 @@ module.exports = function(context, req) {
             routes["addUser"] =
                 "INSERT INTO Users (uEmail) VALUES ('" +
                 req.query.uEmail +
-                "')";
+                "') WHERE NOT EXISTS (SELECT * FROM Users WHERE uEmail ='" +
+                req.query.uEmail +
+                "'";
             routes["getUserReservations"] =
                 "SELECT * FROM Reservation R, Users U " +
                 "WHERE R.uID = U.uID AND U.uEmail = '" +
@@ -77,7 +77,6 @@ module.exports = function(context, req) {
             routes["deleteReservation"] =
                 "DELETE FROM Reservation WHERE ResID = " + req.query.ResID;
         }
-
 
         // try to exec sql based on specified req.query.func parameters
         if (err) {
@@ -97,8 +96,6 @@ module.exports = function(context, req) {
             };
             context.done();
         }
-
-
 
         // executes sql request passed in as first parameter
         function execDbCommand(sqlStatement) {
