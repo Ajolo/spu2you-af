@@ -5,26 +5,25 @@ var config = require("./creds.js");
 module.exports = function(context, req) {
     var connection = new Connection(config);
     connection.on("connect", function(err) {
-        // routes not needing user input
+
+        // initialize routes not needing user input
         var routes = {
             getAllUsers: "SELECT * FROM Users",
             getAllRobots: "SELECT * FROM Robots",
             getAllTimeSlots: "SELECT * FROM TimeSlots",
             getAllReservations: "SELECT * FROM Reservation",
 
-            addUserOld: "INSERT INTO Users (uID) VALUES (5)",
-            //addUser: "INSERT INTO Users DEFAULT VALUES", -- deprecated, should now add and include email
-            addTimeSlotOld: "INSERT INTO TimeSlots (TimeID) VALUES (5)",
-            addTimeSlot:
+            addTimeSlotOld:
                 "INSERT INTO TimeSlots(IsReserved, StartTime, EndTime) VALUES (0,07:30,10:30)",
             addRobotOld: "INSERT INTO Robots (RobotID) VALUES (5)",
             addRobot: "INSERT INTO Robots(IsReserved) VALUES (0)",
 
             deleteUser: "DELETE FROM Users WHERE uID = '25'",
             deleteTimeSlot: "DELETE FROM TimeSlots WHERE TimeID = '5'",
-            deleteRobot: "DELETE FROM Robots WHERE RobotID = '5'"
-            //deleteReservation: "DELETE FROM Reservation WHERE uID = 1"
+            deleteRobot: "DELETE FROM Robots WHERE RobotID = '5'",
+            deleteReservationOld: "DELETE FROM Reservation WHERE uID = 1"
         };
+
 
         // set routes/SQL for query values when specified
         if (req.query.date) {
@@ -37,12 +36,6 @@ module.exports = function(context, req) {
                 req.query.date +
                 "' AND R.TimeID = T.TimeID";
             if (req.query.timeID) {
-                routes["addReservationOld"] = // remove me when addReservation works
-                    "INSERT INTO Reservation(RobotID, uID, TimeID, ResDate) VALUES(1, 1, " +
-                    req.query.timeID +
-                    ", '" +
-                    req.query.date +
-                    "')";
                 if (req.query.uEmail) {
                     routes["addReservation"] =
                         "Execute InsertReservation @uEmail = '" +
@@ -85,6 +78,21 @@ module.exports = function(context, req) {
                 "DELETE FROM Reservation WHERE ResID = " + req.query.ResID;
         }
 
+
+
+        // verify data does not already exist before executing an INSERT sql statement
+        if ((req.query.func).substring(0,3) == 'add') {
+            // var result = checkPreexisting();
+            if (checkPreexisting() == false) {
+                context.res = {
+                    status: 400,
+                    body: "User already exists"
+                };
+            }
+        }
+
+
+
         // try to exec sql based on specified req.query.func parameters
         if (err) {
             context.log(err);
@@ -103,6 +111,8 @@ module.exports = function(context, req) {
             };
             context.done();
         }
+
+
 
         // executes sql request passed in as first parameter
         function execDbCommand(sqlStatement) {
@@ -134,6 +144,20 @@ module.exports = function(context, req) {
             });
 
             connection.execSql(request);
+        }
+
+
+
+        function checkPreexisting() {
+            // if a request is made for an 'add-' function, ensure not duplicate data
+            if (req.query.func == 'addUser') { // check uEmail
+                // execDbCommand("SELECT uID from Users WHERE uEmail = '" + req.query.uEmail + "'");
+                console.log("~~~~~~~~~~~~~~~~~~");
+                console.log(execDbCommand("SELECT uID from Users WHERE uEmail = '" + req.query.uEmail + "'"));
+                console.log("~~~~~~~~~~~~~~~~~~");
+
+                // if ()
+            }
         }
     });
 };
