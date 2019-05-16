@@ -59,9 +59,7 @@ module.exports = function(context, req) {
             routes["addUser"] =
                 "INSERT INTO Users (uEmail) VALUES ('" +
                 req.query.uEmail +
-                "') WHERE NOT EXISTS (SELECT * FROM Users WHERE uEmail ='" +
-                req.query.uEmail +
-                "'";
+                "')";
             routes["getUserReservations"] =
                 "SELECT * FROM Reservation R, Users U " +
                 "WHERE R.uID = U.uID AND U.uEmail = '" +
