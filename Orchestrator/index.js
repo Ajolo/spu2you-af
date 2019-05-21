@@ -29,10 +29,16 @@ module.exports = function(context, req) {
                 "SELECT * FROM Reservation WHERE Reservation.ResDate = '" +
                 req.query.date +
                 "'";
-            routes["getUsedTimeSlots"] =
+            routes["getUsedTimeSlotsOLD"] =
                 "SELECT T.TimeID FROM TimeSlots T, Reservation R WHERE R.ResDate = '" +
                 req.query.date +
                 "' AND R.TimeID = T.TimeID";
+            routes["getAvailableTimeSlots"] =
+                "SELECT T.TimeID FROM TimeSlots T, Reservation R WHERE R.ResDate = '" +
+                req.query.date + 
+                "' EXCEPT ( SELECT T.TimeID FROM TimeSlots T, Reservation R WHERE R.ResDate = '" +
+                req.query.date + 
+                "' AND R.TimeID = T.TimeID )"
             if (req.query.timeID) {
                 if (req.query.uEmail) {
                     routes["addReservation"] =

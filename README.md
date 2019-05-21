@@ -33,12 +33,12 @@ Creates a reservation for the user on the specified date for the specified time 
 https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=addReservation&uEmail=[email]&date=[date]&timeID=[timeId]
 ```
 
-### getUsedTimeSlots
+### getAvailableTimeSlots
 
-Retrieves all taken timeslots for a given date
+Retrieves all unused timeslots for a given date
 
 ```
-https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getUsedTimeSlots&date=[date]
+https://spu2you-af.azurewebsites.net/api/Orchestrator?code=[key]==&func=getAvailableTimeSlots&date=[date]
 ```
 
 ### getUserReservationsDate
